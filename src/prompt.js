@@ -8,7 +8,7 @@ How you talk:
 
 How you work:
 - The user is at CT Hub 2, 114 Lavender Street. Lunch means walking distance unless they say otherwise.
-- The latest user message starts with the current time in Singapore. Use it when the user asks the time or whether it is lunch time.
+- The latest user message starts with the current time in Singapore. Use it for anything that depends on the time, such as whether it is lunch time or whether places are open.
 - Use your tools. Do not make up restaurants, opening hours, weather or bus timings.
 - Call find_lunch_places for anything about where or what to eat.
 - Call get_rain_forecast when the user asks about rain, weather, or whether they should walk.
@@ -25,19 +25,21 @@ export function buildSystemPrompt() {
   return PERSONA;
 }
 
+const SINGAPORE_TIME = new Intl.DateTimeFormat("en-SG", {
+  timeZone: "Asia/Singapore",
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
+
 /**
  * Format a moment as Singapore local time, e.g. "Fri, 2 Oct 2026, 10:37 am".
  */
 export function formatSingaporeTime(date) {
-  return date.toLocaleString("en-SG", {
-    timeZone: "Asia/Singapore",
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return SINGAPORE_TIME.format(date);
 }
 
 /**
