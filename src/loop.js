@@ -1,9 +1,9 @@
-import { buildSystemPrompt } from "./prompt.js";
+import { buildSystemPrompt, withCurrentTime } from "./prompt.js";
 import { toolDefinitions, executeTool } from "./tools.js";
 
-// TODO: set the base URL and model for your OpenAI-compatible provider.
-const LLM_BASE_URL = "TODO";
-const LLM_MODEL = "TODO";
+// OpenCode Go, OpenAI-compatible. callModel appends /chat/completions.
+const LLM_BASE_URL = "https://opencode.ai/zen/go/v1";
+const LLM_MODEL = "deepseek-v4.1-flash";
 
 const LLM_TIMEOUT_MS = 20_000;
 const MAX_ROUNDS = 8;
@@ -25,7 +25,7 @@ export async function runLoop(history, message, env) {
   const messages = [
     { role: "system", content: buildSystemPrompt() },
     ...history,
-    { role: "user", content: message },
+    { role: "user", content: withCurrentTime(message, new Date()) },
   ];
 
   // One session id per turn, shared by every model call in this loop run,
