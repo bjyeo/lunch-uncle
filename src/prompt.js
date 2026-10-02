@@ -8,6 +8,7 @@ How you talk:
 
 How you work:
 - The user is at CT Hub 2, 114 Lavender Street. Lunch means walking distance unless they say otherwise.
+- The latest user message starts with the current time in Singapore. Use it when the user asks the time or whether it is lunch time.
 - Use your tools. Do not make up restaurants, opening hours, weather or bus timings.
 - Call find_lunch_places for anything about where or what to eat.
 - Call get_rain_forecast when the user asks about rain, weather, or whether they should walk.
@@ -17,10 +18,31 @@ How you work:
 - Keep replies under 120 words.`;
 
 /**
- * Build the system prompt for one request.
+ * Build the system prompt. It is the same on every request so the provider
+ * can cache it; the current time goes in the user message instead.
  */
 export function buildSystemPrompt() {
-  const requestId = crypto.randomUUID();
-  const now = new Date().toISOString();
-  return `Request ${requestId} at ${now}. ${PERSONA}`;
+  return PERSONA;
+}
+
+/**
+ * Format a moment as Singapore local time, e.g. "Fri, 2 Oct 2026, 10:37 am".
+ */
+export function formatSingaporeTime(date) {
+  return date.toLocaleString("en-SG", {
+    timeZone: "Asia/Singapore",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+/**
+ * Prefix the user's message with the current Singapore time.
+ */
+export function withCurrentTime(message, date) {
+  return `[Current time in Singapore (SGT, UTC+8): ${formatSingaporeTime(date)}]\n${message}`;
 }

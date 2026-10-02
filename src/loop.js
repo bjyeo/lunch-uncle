@@ -1,4 +1,4 @@
-import { buildSystemPrompt } from "./prompt.js";
+import { buildSystemPrompt, withCurrentTime } from "./prompt.js";
 import { toolDefinitions, executeTool } from "./tools.js";
 
 // OpenCode Go, OpenAI-compatible. callModel appends /chat/completions.
@@ -25,7 +25,7 @@ export async function runLoop(history, message, env) {
   const messages = [
     { role: "system", content: buildSystemPrompt() },
     ...history,
-    { role: "user", content: message },
+    { role: "user", content: withCurrentTime(message, new Date()) },
   ];
 
   // One session id per turn, shared by every model call in this loop run,
